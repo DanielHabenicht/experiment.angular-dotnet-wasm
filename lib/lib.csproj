@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <!-- <EmbedBinaries>false</EmbedBinaries>
+        <Clean>false</Clean>
+        <PublishTrimmed>true</PublishTrimmed>
+        <InvariantGlobalization>true</InvariantGlobalization> -->
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="DotNetJS" Version="*" GeneratePathProperty="true"/>
+        <PackageReference Include="Microsoft.Net.Compilers.Toolset" Version="4.1.0">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers;</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+
+    <!-- Because of https://github.com/Elringus/DotNetJS/issues/20 we must use the pre-compiled dotnet.wasm runtime -->
+    <ItemGroup>
+        <None Include="$(PkgDotNetJS)\js\dotnet.wasm" TargetPath="wwwroot\_framework\dotnet.wasm" CopyToOutputDirectory="Always" />
+        <None Include="$(PkgDotNetJS)\js\dotnet.wasm" TargetPath="dotnet.wasm" CopyToOutputDirectory="Always" />
+    </ItemGroup>
+</Project>
