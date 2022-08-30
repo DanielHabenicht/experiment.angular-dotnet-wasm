@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
-import { BootData, boot, HelloWorld } from '../assets/lib-wasm-old/dotnet.js';
-
+import * as dotnet from '../assets/lib-wasm/dotnet.js';
 @Injectable({
   providedIn: 'root',
 })
@@ -15,7 +14,7 @@ export class LibWasmService {
 
   private async instantiateWasm() {
     // Providing implementation for 'GetHostName' function declared in 'HelloWorld' C# assembly.
-    HelloWorld.GetHostName = () => 'Browser';
+    dotnet.HelloWorld.GetHostName = () => 'Browser';
 
     const assemblyFiles = [
       'Microsoft.JSInterop.WebAssembly.dll',
@@ -39,29 +38,34 @@ export class LibWasmService {
     ];
 
     // Booting the DotNet runtime and invoking entry point.
-    const bootData: BootData = {
-      wasm: await loadfile('assets/lib-wasm/dotnet.wasm'),
-      assemblies: await Promise.all(
-        assemblyFiles.map(async (file) => {
-          const data = await loadfile('assets/lib-wasm/_framework/' + file);
-          return {
-            name: file,
-            data: data,
-          };
-        })
-      ),
-      entryAssemblyName: 'lib.dll',
-    };
+    // const bootData: dotnet.BootData = {
+    //   wasm: await loadfile('assets/lib-wasm/dotnet.wasm'),
+    //   assemblies: await Promise.all(
+    //     assemblyFiles.map(async (file) => {
+    //       const data = await loadfile('assets/lib-wasm/' + file);
+    //       return {
+    //         name: file,
+    //         data: data,
+    //       };
+    //     })
+    //   ),
+    //   entryAssemblyName: 'lib.dll',
+    // };
 
     /** @ts-ignore */
-    await boot(bootData);
+    // await dotnet.boot(bootData);
+    await dotnet.boot();
     this.wasmReady.next(true);
     // Invoking 'GetName()' C# method defined in 'HelloWorld' assembly.
-    const guestName = HelloWorld.GetName();
+    const guestName = dotnet.HelloWorld.GetName();
     console.log(`Welcome, ${guestName}! Enjoy your global space.`);
 
     // const userName = HelloWorld.GetUser();
     // console.log(`Welcome, ` + userName);
+  }
+
+  public validateModel(model: dotnet.HelloWorld.WeatherForecast){
+    return dotnet.HelloWorld.Validate(model)
   }
 
   // public fibonacci(input: number): Observable<number> {

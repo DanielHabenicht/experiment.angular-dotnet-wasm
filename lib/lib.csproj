@@ -2,18 +2,14 @@
 
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
-        <!-- <EmbedBinaries>false</EmbedBinaries>
-        <Clean>false</Clean>
+        <!-- <EmbedBinaries>false</EmbedBinaries> -->
+        <!-- <Clean>false</Clean>
         <PublishTrimmed>true</PublishTrimmed>
         <InvariantGlobalization>true</InvariantGlobalization> -->
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="DotNetJS" Version="*" GeneratePathProperty="true"/>
-        <PackageReference Include="Microsoft.Net.Compilers.Toolset" Version="4.1.0">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers;</IncludeAssets>
-        </PackageReference>
+        <PackageReference Include="DotNetJS" Version="0.13.2" GeneratePathProperty="true"/>
     </ItemGroup>
 
     <!-- Because of https://github.com/Elringus/DotNetJS/issues/20 we must use the pre-compiled dotnet.wasm runtime -->
@@ -21,4 +17,12 @@
         <None Include="$(PkgDotNetJS)\js\dotnet.wasm" TargetPath="wwwroot\_framework\dotnet.wasm" CopyToOutputDirectory="Always" />
         <None Include="$(PkgDotNetJS)\js\dotnet.wasm" TargetPath="dotnet.wasm" CopyToOutputDirectory="Always" />
     </ItemGroup>
+
+    <ItemGroup>
+        <PublishFiles Include="bin/**/*.*"/>
+    </ItemGroup>
+
+    <Target Name="CopyCustomContent" AfterTargets="AfterBuild">
+        <Copy SourceFiles="@(PublishFiles)" DestinationFolder="../app/ClientApp/src/assets/lib-wasm" SkipUnchangedFiles="true" />
+    </Target>
 </Project>

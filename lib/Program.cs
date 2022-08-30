@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using DotNetJS;
 using Microsoft.JSInterop;
 
@@ -23,5 +25,12 @@ public partial class Program
 
 
     [JSInvokable] // The method is invoked from JavaScript.
-    public static User GetUser() => new User { Name = "DotNet", Age = "JS" };
+    public static List<ValidationResult> Validate(WeatherForecast forecast)
+    {
+        var context = new ValidationContext(forecast, serviceProvider: null, items: null);
+        var validationResults = new List<ValidationResult>();
+
+        bool isValid = Validator.TryValidateObject(forecast, context, validationResults, true);
+        return validationResults;
+    }
 }

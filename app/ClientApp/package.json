@@ -47,5 +47,10 @@
     "karma-jasmine-html-reporter": "^1.5.0",
     "typescript": "~4.2.3"
   },
-  "optionalDependencies": {}
+  "optionalDependencies": {},
+  "browser": {
+    "fs": false,
+    "os": false,
+    "path": false
+  }
 }
